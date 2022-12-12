@@ -1,0 +1,34 @@
+//file:noinspection GrDeprecatedAPIUsage
+plugins {
+    id 'java'
+}
+
+group 'dev.folorunso'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.0'
+    implementation group: 'io.javalin', name: 'javalin', version: '4.6.4'
+    implementation group: 'org.slf4j', name: 'slf4j-simple', version: '1.8.0-beta4'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.4.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task customFatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'dev.folorunso.app.App'
+    }
+    baseName = 'all-in-one-jar'
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
